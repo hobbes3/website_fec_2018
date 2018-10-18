@@ -1,0 +1,33 @@
+#tooltip {
+    font-size: 1.2em;
+    position: absolute;
+    z-index: 100;
+    visibility: hidden;
+    background-color: black;
+    color: white;
+    padding: 0.2em;
+}
+
+#viz_halo {
+    display: block;
+    margin: auto;
+}
+
+#viz_halo .label-text {
+    alignment-baseline: middle;
+    text-transform: uppercase;
+}
+
+#viz_halo .label-inner {
+    fill: white;
+}
+
+#viz_halo .line {
+    fill: none;
+    stroke-width: 1.5px;
+}
+
+#viz_halo path {
+    stroke: #161616;
+    stroke-width: 1px;
+}
