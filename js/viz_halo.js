@@ -68,6 +68,8 @@ function(
                     o.count = num;
                 }
 
+                o.inner = o.inner + " - " + o.office + " - " + o.state;
+
                 return o;
             });
 
@@ -93,16 +95,13 @@ function(
         var ribbon_choice = "ALL",
             animation = false,
             // descriptions of each config setting in formatter.html
-            //width                        = config_default("width",                        that.$el.width() * 0.8),
             width                        = config_default("width",                        1300),
-            //height                       = config_default("height",                       width * 0.8),
-            height                       = config_default("height",                       900),
+            height                       = config_default("height",                       1000),
             radius                       = config_default("radius",                       width / 2 * 0.55),
             radius_label                 = config_default("radius_label",                 radius * 1.1),
             outer_thickness              = config_default("outer_thickness",              radius * 0.07),
             inner_thickness_pct          = config_default("inner_thickness_pct",          0.8),
             ribbon_radius_cp_offset      = config_default("ribbon_radius_cp_offset",      radius * 0.2),
-            //outer_colors                 = config_default("outer_colors",                 "schemeCategory20b"),
             outer_colors                 = config_default("outer_colors",                 "schemeDark2"),
             radius_pack                  = config_default("radius_pack",                  0.8 * (radius - outer_thickness)),
             padding_pack                 = config_default("padding_pack",                 radius * 0.1),
@@ -111,7 +110,7 @@ function(
             group_outer_limit            = config_default("group_outer_limit",            30),
             group_inner_limit            = config_default("group_inner_limit",            10),
             group_use_others_outer       = config_default("group_use_others_outer",       "true"),
-            group_use_others_inner       = config_default("group_use_others_inner",       "true"),
+            group_use_others_inner       = config_default("group_use_others_inner",       "false"),
             group_others_outer_label     = config_default("group_others_outer_label",     "others"),
             group_others_inner_label     = config_default("group_others_inner_label",     "others"),
             group_others_inner_color     = config_default("group_others_inner_color",     "#808080"),
@@ -119,10 +118,8 @@ function(
             label_text_color             = config_default("label_text_color",             "#000000"),
             label_line_color             = config_default("label_line_color",             "#000000"),
             label_dot_color              = config_default("label_dot_color",              "#000000"),
-            //label_font_size              = config_default("label_font_size",              radius * 0.04),
-            label_font_size              = config_default("label_font_size",              12),
+            label_font_size              = config_default("label_font_size",              11),
             label_spacing                = config_default("label_spacing",                radius * 0.01),
-            //label_wrap_length            = config_default("label_wrap_length",            radius * 0.7),
             label_wrap_length            = config_default("label_wrap_length",            500),
             inner_labels_scale           = config_default("inner_labels_scale",           0.9),
             label_relax_delta            = config_default("label_relax_delta",            0.5),
@@ -148,21 +145,25 @@ function(
         var total = _(rows).total("count");
 
         if(rows.length == 0) {
-            d3.select("#viz_halo").append("text")
-                .attr("x", width / 2)
-                .attr("y", 300)
-                .attr("alignment-baseline", "middle")
-                .attr("text-anchor", "middle")
-                .text("No data with the above filters.");
+            d3.select("#viz_halo")
+                .attr("height", 200)
+                .append("text")
+                    .attr("x", width / 2)
+                    .attr("y", 100)
+                    .attr("alignment-baseline", "middle")
+                    .attr("text-anchor", "middle")
+                    .text("No data with the above filters.");
             return;
         }
         else if(total < 1000) {
-            d3.select("#viz_halo").append("text")
-                .attr("x", width / 2)
-                .attr("y", 300)
-                .attr("alignment-baseline", "middle")
-                .attr("text-anchor", "middle")
-                .text("Too little money with the above filters. Total of $" + total + ".");
+            d3.select("#viz_halo")
+                .attr("height", 200)
+                .append("text")
+                    .attr("x", width / 2)
+                    .attr("y", 100)
+                    .attr("alignment-baseline", "middle")
+                    .attr("text-anchor", "middle")
+                    .text("Too little money with the above filters. Total of $" + total + ".");
             return;
         }
 
@@ -307,6 +308,7 @@ function(
                     "inner_img": inner_img,
                     "inner_link": v[0].inner_link || null,
                     "inner_color": inner_color,
+                    "state": v[0].state,
                     "data": v
                 };
             })

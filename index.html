@@ -81,7 +81,7 @@
 
         <div class="row">
           <div class="col-lg-8 mx-auto">
-            <h2 class="mb-4">Halo</h2>
+            <h2 class="mb-4">The Data</h2>
             <label for="select_state">
                 Select an office:
             </label>
@@ -155,21 +155,35 @@
                 <option value="REP">Republicans</option>
                 <option value="OTHERS">Others</option>
             </select>
-            <label for="select_state">
-                Select toward:
-            </label>
-            <select class="form-control" id="select_toward">
-                <option value="ALL">Both</option>
-                <option value="supporting">Supporting</option>
-                <option value="opposing">Opposing</option>
-            </select>
           </div>
         </div>
       </div>
 
-      <svg id="viz_halo"></svg>
-
+      <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="mb-4">Direct Donations: Individual Contributions</h2>
+            </div>
+        </div>
+      </div>
       <svg id="viz_bar"></svg>
+
+      <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="mb-4">Indirect donations: Super PAC Contributions</h2>
+                <label for="select_state">
+                    Select toward:
+                </label>
+                <select class="form-control" id="select_toward">
+                    <option value="ALL">Both</option>
+                    <option value="supporting">Supporting</option>
+                    <option value="opposing">Opposing</option>
+                </select>
+            </div>
+        </div>
+      </div>
+      <svg id="viz_halo"></svg>
 
       <div class="container">
         <!-- Featured Project Row -->

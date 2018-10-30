@@ -41,7 +41,7 @@ function(
             .groupBy("inner")
             .map(function(v, k) {
                 var o = {
-                    "name": k,
+                    "name": k + " - " + v[0].office + " - " + v[0].state,
                     "count": parseFloat(v[0].schedule_a_total),
                     "party": v[0].party
                 };
@@ -61,24 +61,30 @@ function(
             }
         });
 
+        var width = 1500;
+
         var total = _(rows).total("count");
 
         if(rows.length == 0) {
-            d3.select("#viz_halo").append("text")
-                .attr("x", width / 2)
-                .attr("y", 300)
-                .attr("alignment-baseline", "middle")
-                .attr("text-anchor", "middle")
-                .text("No data with the above filters.");
+            d3.select("#viz_bar")
+                .attr("height", 200)
+                .append("text")
+                    .attr("x", width / 2)
+                    .attr("y", 100)
+                    .attr("alignment-baseline", "middle")
+                    .attr("text-anchor", "middle")
+                    .text("No data with the above filters.");
             return;
         }
         else if(total < 1000) {
-            d3.select("#viz_halo").append("text")
-                .attr("x", width / 2)
-                .attr("y", 300)
-                .attr("alignment-baseline", "middle")
-                .attr("text-anchor", "middle")
-                .text("Too little money with the above filters. Total of $" + total + ".");
+            d3.select("#viz_bar")
+                .attr("height", 200)
+                .append("text")
+                    .attr("x", width / 2)
+                    .attr("y", 100)
+                    .attr("alignment-baseline", "middle")
+                    .attr("text-anchor", "middle")
+                    .text("Too little money with the above filters. Total of $" + total + ".");
             return;
         }
 
@@ -104,7 +110,7 @@ function(
                 .value();
         }
 
-        var top = get_top(rows, "name", 10);
+        var top = get_top(rows, "name", 30);
 
         var data = _(rows).chain()
             .map(function(o) {
@@ -149,8 +155,7 @@ function(
         var format_bar = d3.format("$,d");
         var format_tick = d3.format("$~s");
         var margin = ({top: 30, right: 50, bottom: 10, left: 250});
-        var height = data.length * 25 + margin.top + margin.bottom;
-        var width = 1500;
+        var height = data.length * 25 + margin.top + margin.bottom || 200;
 
         var yAxis = g => g
             .attr("transform", `translate(${margin.left},0)`)
@@ -175,23 +180,42 @@ function(
             .attr("height", height);
 
         svg.append("g")
-            .attr("fill", "steelblue")
+            //.attr("fill", "steelblue")
             .selectAll("rect")
             .data(data)
             .enter().append("rect")
             .attr("x", x(0))
             .attr("y", d => y(d.name))
             .attr("width", d => x(d.value) - x(0))
-            .attr("height", y.bandwidth());
+            .attr("height", y.bandwidth())
+            .attr("fill", d => {
+                switch(d.party) {
+                    case "REP": color = "#d8241e"; break;
+                    case "DEM": color = "#1576b6"; break;
+                    default: color = "#808080";
+                }
+                return color;
+            });
+
+        var width_limit = 100;
 
         svg.append("g")
-            .attr("fill", "white")
-            .attr("text-anchor", "end")
-            .style("font", "12px sans-serif")
             .selectAll("text")
             .data(data)
             .enter().append("text")
-            .attr("x", d => x(d.value) - 4)
+            .attr("fill", d => {
+                var width = x(d.value) - x(0);
+                return width > width_limit ? "white" : "black";
+            })
+            .attr("text-anchor", d => {
+                var width = x(d.value) - x(0);
+                return width > width_limit ? "end" : "start";
+            })
+            .attr("x", d => {
+                var width = x(d.value) - x(0);
+
+                return width > width_limit ? x(d.value) - 4 : x(d.value) + 4;
+            })
             .attr("y", d => y(d.name) + y.bandwidth() / 2)
             .attr("dy", "0.35em")
             .text(d => format_bar(d.value));
