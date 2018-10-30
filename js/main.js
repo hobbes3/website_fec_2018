@@ -4,7 +4,8 @@ require([
     "underscore",
     "moment",
     "js/helper",
-    "js/halo"
+    "js/viz_halo",
+    "js/viz_bar"
 ],
 function(
     $,
@@ -12,7 +13,8 @@ function(
     _,
     moment,
     helper,
-    halo
+    viz_halo,
+    viz_bar
 ) {
     var data = {};
 
@@ -26,14 +28,16 @@ function(
     };
 
     Promise.all(files.map(url => d3.csv(url))).then(function(values) {
-        halo(values[0], choices);
+        viz_halo(values[0], choices);
+        viz_bar(values[0], choices);
 
         $("#select_office, #select_state, #select_party").change(function() {
             choices.office = $("#select_office").val();
             choices.state  = $("#select_state").val();
             choices.party  = $("#select_party").val();
 
-            halo(values[0], choices);
+            viz_halo(values[0], choices);
+            viz_bar(values[0], choices);
         });
     });
 });

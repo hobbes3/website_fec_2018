@@ -11,32 +11,13 @@ function(
     helper
 ) {
     return function(data, choices) {
-        //console.log("updateView");
-
-        //var that = this;
-
-        //if(!that.orig_rows) {
-        //    return;
-        //}
-
-        //// Deep copy again
-        //var rows = JSON.parse(JSON.stringify(that.orig_rows))
-
-        //console.log("clearing");
-
-        //this.$el.find("svg").remove();
-        clearTimeout(window.timer_label_relax);
-        clearTimeout(window.timer_auto_transition);
-        clearTimeout(window.timer_auto_transition_resume);
-        $("#select_toward").unbind("change").val("ALL");
-
         var that = this;
 
         // Deep copy
         var rows = JSON.parse(JSON.stringify(data))
 
         that.tooltip = d3.select("#tooltip");
-        $("#viz_halo").empty();
+        $("#viz_bar").empty();
 
         rows = _(rows)
             .filter(function(v) {
@@ -57,85 +38,12 @@ function(
                 }
             })
             .map(function(o) {
-            //_(required_fields).each(function(k) {
-            //    o[k] = SplunkVisualizationUtils.escapeHtml(o[k])
-            //});
+                var num = parseFloat(o.schedule_a_total);
 
-            var num = parseFloat(o.count);
-
-            if(isNaN(num)) {
-                throw new SplunkVisualizationBase.VisualizationError(
-                    "All values of the field count must be numeric. Encountered the value: " + o.count
-                );
-            }
-            else {
                 o.count = num;
-            }
 
-            return o;
-        });
-
-        function config_default(setting, default_value) {
-            //var value = config[that.getPropertyNamespaceInfo().propertyNamespace + setting];
-
-            //if(value === undefined) {
-            //    return default_value;
-            //}
-            //else {
-            //    value = value.trim();
-            //}
-
-            //if(value === "") {
-            //    return default_value;
-            //}
-
-            //return typeof default_value === "number" ? parseFloat(value) : value;
-
-            return default_value;
-        }
-
-        var ribbon_choice = "ALL",
-            animation = false,
-            // descriptions of each config setting in formatter.html
-            //width                        = config_default("width",                        that.$el.width() * 0.8),
-            width                        = config_default("width",                        1300),
-            height                       = config_default("height",                       width * 0.8),
-            radius                       = config_default("radius",                       width / 2 * 0.55),
-            radius_label                 = config_default("radius_label",                 radius * 1.1),
-            outer_thickness              = config_default("outer_thickness",              radius * 0.07),
-            inner_thickness_pct          = config_default("inner_thickness_pct",          0.8),
-            ribbon_radius_cp_offset      = config_default("ribbon_radius_cp_offset",      radius * 0.2),
-            //outer_colors                 = config_default("outer_colors",                 "schemeCategory20b"),
-            outer_colors                 = config_default("outer_colors",                 "schemeDark2"),
-            radius_pack                  = config_default("radius_pack",                  0.8 * (radius - outer_thickness)),
-            padding_pack                 = config_default("padding_pack",                 radius * 0.1),
-            opacity_ribbon               = config_default("opacity_ribbon",               0.6),
-            opacity_fade                 = config_default("opacity_fade",                 0.1),
-            group_outer_limit            = config_default("group_outer_limit",            30),
-            group_inner_limit            = config_default("group_inner_limit",            10),
-            group_use_others_outer       = config_default("group_use_others_outer",       "true"),
-            group_use_others_inner       = config_default("group_use_others_inner",       "true"),
-            group_others_outer_label     = config_default("group_others_outer_label",     "others"),
-            group_others_inner_label     = config_default("group_others_inner_label",     "others"),
-            group_others_inner_color     = config_default("group_others_inner_color",     "#808080"),
-            group_others_inner_img       = config_default("group_others_inner_img",       null),
-            label_text_color             = config_default("label_text_color",             "#000000"),
-            label_line_color             = config_default("label_line_color",             "#000000"),
-            label_dot_color              = config_default("label_dot_color",              "#000000"),
-            //label_font_size              = config_default("label_font_size",              radius * 0.04),
-            label_font_size              = config_default("label_font_size",              12),
-            label_spacing                = config_default("label_spacing",                radius * 0.01),
-            //label_wrap_length            = config_default("label_wrap_length",            radius * 0.7),
-            label_wrap_length            = config_default("label_wrap_length",            500),
-            inner_labels_scale           = config_default("inner_labels_scale",           0.9),
-            label_relax_delta            = config_default("label_relax_delta",            0.5),
-            label_relax_sleep            = config_default("label_relax_sleep",            10),
-            auto_transition              = config_default("auto_transition",              "never"),
-            auto_transition_sleep        = config_default("auto_transition_sleep",        2000),
-            auto_transition_resume_sleep = config_default("auto_transition_resume_sleep", 5000),
-            draggable                    = config_default("draggable",                    "true"),
-            transition_duration          = config_default("transition_duration",          750),
-            warning_override             = config_default("warning_override",             "false");
+                return o;
+            });
 
         _.mixin({
             "total": function(data, key) {
@@ -151,7 +59,7 @@ function(
         var total = _(rows).total("count");
 
         if(rows.length == 0) {
-            d3.select("#viz_halo").append("text")
+            d3.select("#viz_bar").append("text")
                 .attr("x", width / 2)
                 .attr("y", 300)
                 .attr("alignment-baseline", "middle")
@@ -160,7 +68,7 @@ function(
             return;
         }
         else if(total < 1000) {
-            d3.select("#viz_halo").append("text")
+            d3.select("#viz_bar").append("text")
                 .attr("x", width / 2)
                 .attr("y", 300)
                 .attr("alignment-baseline", "middle")
@@ -190,7 +98,6 @@ function(
                 .value();
         }
 
-        var top_outer = get_top(rows, "outer", group_outer_limit);
         var top_inner = get_top(rows, "inner", group_inner_limit);
 
         rows = _(rows).chain()
