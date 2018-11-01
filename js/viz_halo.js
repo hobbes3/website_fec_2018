@@ -316,7 +316,8 @@ function(
 
         var color_outer = d3.scaleOrdinal(d3[outer_colors]);
 
-        var number_format = d3.format(",d");
+        var format_dollar = d3.format("$,d");
+        var format_pct = d3.format(".0%");
 
         function tooltip_position() {
             that.tooltip
@@ -412,11 +413,7 @@ function(
                 pct = count / total * 100,
                 pct_ribbon = count / total_ribbon * 100;
 
-            var html = outer_label + " -> " + ribbon_label + " -> " + inner_label + ": $" + number_format(count);
-
-            html += ribbon_choice === "ALL" ?
-                "<br>" + pct_label(pct) + " of total amount" :
-                "<br>" + ribbon_label + ": " + pct_label(pct_ribbon) + " of total amount";
+            var html = outer_label + " " + ribbon_label + " " + inner_label + ": " + format_dollar(count);
 
             if(d.data.outer_link) {
                 html += "<br><i>Click for more details</i>";
@@ -826,27 +823,25 @@ function(
             if(animation) return;
 
             var inner_label = d.data.inner.capitalize(),
-                count = d.value,
-                total = data.stats.total,
-                pct = count / total * 100,
-                html;
+                all_arrow = "",
+                sup_arrow = "",
+                opp_arrow = "",
+                total_e = _(d.data.data).total("count"),
+                sup = _(d.data.data).chain().filter(o => o.ribbon == "supporting").total("count").value(),
+                opp = _(d.data.data).chain().filter(o => o.ribbon == "opposing").total("count").value();
 
-
-            if(ribbon_choice === "ALL") {
-                html = inner_label + ": $" + number_format(count) + " total" +
-                    "<br>" + pct_label(pct) + " of total amount";
-            }
-            else {
-                total_ribbon = _(data.stats.ribbon).findWhere({"ribbon": ribbon_choice}).total,
-                pct_ribbon = count / total_ribbon * 100;
-
-                html = ribbon_choice + " -> " + inner_label + ": $" + number_format(count) +
-                    "<br>" + ribbon_choice + ": " + pct_label(pct_ribbon) + " of total amount";
+            switch(ribbon_choice) {
+                case "supporting": sup_arrow = "⇒ "; break;
+                case "opposing": opp_arrow = "⇒ "; break;
+                default: all_arrow = "⇒ ";
             }
 
-            if(d.data.inner_link) {
-                html += "<br><i>Click for more details</i>";
-            }
+            var html = inner_label + "<br/>" +
+                "Direct donations: " + format_dollar(parseInt(d.data.data[0].total)) + "<br/>" +
+                all_arrow + "Indirect donations: " + format_dollar(total_e) + "<br/>" +
+                sup_arrow + "Indirect donations supporting: " + format_dollar(sup) + " (" + format_pct(sup/total_e) + ")<br/>" +
+                opp_arrow + "Indirect donations opposing: " + format_dollar(opp) + " (" + format_pct(opp/total_e) + ")<br/>" +
+                "<i>Click for more details</i>";
 
             that.tooltip
                 .style("visibility", "visible")
@@ -948,11 +943,7 @@ function(
                 pct = count / total * 100,
                 pct_ribbon = count / total_ribbon * 100;
 
-            var html = outer_label + " -> " + ribbon_label + " -> " + inner_label + ": $" + number_format(count);
-
-            html += ribbon_choice === "ALL" ?
-                "<br>" + inner_label + ": " + pct_label(pct) + " of total amount" :
-                "<br>" + ribbon_label + " -> " + inner_label + ": " + pct_label(pct_ribbon) + " of total amount";
+            var html = outer_label + " " + ribbon_label + " " + inner_label + ": " + format_dollar(count);
 
             that.tooltip
                 .style("visibility", "visible")
@@ -1136,7 +1127,7 @@ function(
                 inner_label = d.data.inner.capitalize(),
                 count = d.data.count;
 
-            var html = outer_label + " -> " + ribbon_label + " -> " + inner_label + ": $" + number_format(count);
+            var html = outer_label + " " + ribbon_label + " " + inner_label + ": " + format_dollar(count);
 
             that.tooltip
                 .style("visibility", "visible")
