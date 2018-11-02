@@ -25,6 +25,8 @@ function(
         "party":  "ALL"
     };
 
+    var last_choices = _(choices).clone();
+
     _.mixin({
         "total": function(data, key) {
             return _(data).chain()
@@ -51,75 +53,65 @@ function(
             return o;
         });
 
-        var total = _(data).total("total");
-        var total_e = _(data).total("count");
+        function update_totals(choices) {
+            var filtered_data = _(data)
+                .filter(o => (choices.office == "ALL" || choices.office == o.office) &&
+                    (choices.state == "ALL" || choices.state == o.state) &&
+                    (choices.party == "ALL" || choices.party == o.party)
+                );
 
-        $("#total").text(format_dollar(total));
-        $("#total_e").text(format_dollar(total_e));
+            var total = _(filtered_data).total("total");
+            var total_e = _(filtered_data).total("count");
 
-        function create_selects(choices) {
-            var office_data = _(data).chain()
-                .groupBy("office")
-                .map((v, k) => ({
-                    "office": k,
-                    "office_full": v[0].office_full,
-                    "total": _(v).total("total"),
-                    "total_e": _(v).total("count")
-                }))
+            $("#total").text(format_dollar(total));
+            $("#total_e").text(format_dollar(total_e));
+        }
+
+        function create_select(choices, select) {
+            var select_data = _(data).chain()
+                .filter(o => {
+                    switch(select) {
+                        case "office": return (choices.state == "ALL" || choices.state == o.state) && (choices.party == "ALL" || choices.party == o.party);
+                        case "state": return (choices.office == "ALL" || choices.office == o.office) && (choices.party == "ALL" || choices.party == o.party);
+                        case "party": return (choices.office == "ALL" || choices.office == o.office) && (choices.state == "ALL" || choices.state == o.state);
+                    }
+                })
+                .groupBy(select)
+                .map((v, k) => {
+                    var o = {
+                        "total": _(v).total("total"),
+                        "total_e": _(v).total("count")
+                    }
+
+                    o[select] = k;
+                    o[select + "_full"] = v[0][select + "_full"];
+
+                    return o;
+                })
+                .sortBy(select + "_full")
                 .value();
 
-            $(office_data).each((i, o) => {
-                $("#select_office").append('<option value="' + o.office + '">' +
-                    o.office_full +
+            $("#select_" + select).find('option[value!=ALL]').remove();
+
+            $(select_data).each((i, o) => {
+                $("#select_" + select).append('<option value="' + o[select] + '">' +
+                    o[select + "_full"] +
                     ' - Direct Donation: ' + format_dollar_select(o.total/1E6) + 'M' +
                     ' - Indirect Donation: ' + format_dollar_select(o.total_e/1E6) + 'M' +
                     '</option>'
                 )
             });
 
-            var state_data = _(data).chain()
-                .groupBy("state")
-                .map((v, k) => ({
-                    "state": k,
-                    "state_full": v[0].state_full,
-                    "total": _(v).total("total"),
-                    "total_e": _(v).total("count")
-                }))
-                .sortBy("state_full")
-                .value();
+            $("#select_" + select).val(choices[select]);
+        }
 
-            $(state_data).each((i, o) => {
-                $("#select_state").append('<option value="' + o.state + '">' +
-                    o.state_full +
-                    ' - Direct Donation: ' + format_dollar_select(o.total/1E6) + 'M' +
-                    ' - Indirect Donation: ' + format_dollar_select(o.total_e/1E6) + 'M' +
-                    '</option>'
-                )
-            });
-
-            var party_data = _(data).chain()
-                .groupBy("party")
-                .map((v, k) => ({
-                    "party": k,
-                    "party_full": v[0].party_full,
-                    "total": _(v).total("total"),
-                    "total_e": _(v).total("count")
-                }))
-                .sortBy("total")
-                .reverse()
-                .value();
-
-            $(party_data).each((i, o) => {
-                $("#select_party").append('<option value="' + o.party + '">' +
-                    o.party_full +
-                    ' - Direct Donation: ' + format_dollar_select(o.total/1E6) + 'M' +
-                    ' - Indirect Donation: ' + format_dollar_select(o.total_e/1E6) + 'M' +
-                    '</option>'
-                )
-            });
-
+        function create_toward_select(choices) {
             var toward_data = _(data).chain()
-                .filter(o => o.ribbon != "null")
+                .filter(o => (o.ribbon != "null") &&
+                    (choices.office == "ALL" || choices.office == o.office) &&
+                    (choices.state == "ALL" || choices.state == o.state) &&
+                    (choices.party == "ALL" || choices.party == o.party)
+                )
                 .groupBy("ribbon")
                 .map((v, k) => ({
                     "ribbon": k,
@@ -129,7 +121,7 @@ function(
                 .value();
 
             $(toward_data).each((i, o) => {
-                $("#select_toward").append('<option value="' + o.ribbon + '">' +
+                $("#select_toward").find('option[value!=ALL]').remove().append('<option value="' + o.ribbon + '">' +
                     o.ribbon.capitalize() +
                     ' - Indirect Donation: ' + format_dollar_select(o.total_e/1E6) + 'M (' + format_pct(o.total_e/total_e) + ')' +
                     '</option>'
@@ -137,18 +129,32 @@ function(
             });
         }
 
-        create_selects(choices);
+        update_totals(choices);
+        create_select(choices, "office");
+        create_select(choices, "state");
+        create_select(choices, "party");
+        create_toward_select(choices);
         viz_halo(data, choices);
         viz_bar(data, choices);
+        last_choices = _(choices).clone();
 
         $("#select_office, #select_state, #select_party").change(function() {
             choices.office = $("#select_office").val();
             choices.state  = $("#select_state").val();
             choices.party  = $("#select_party").val();
 
-            //create_selects(choices);
+            update_totals(choices);
+
+            _(choices).mapObject((v, k) => {
+                if(last_choices[k] == v) {
+                    create_select(choices, k);
+                }
+            })
+
+            create_toward_select(choices);
             viz_halo(data, choices);
             viz_bar(data, choices);
+            last_choices = _(choices).clone();
         });
 
         $("#reset").on("click", e => {
@@ -158,7 +164,14 @@ function(
                 "party":  "ALL"
             };
 
-            create_selects(choices);
+            update_totals(choices);
+            create_select(choices, "office");
+            create_select(choices, "state");
+            create_select(choices, "party");
+            create_toward_select(choices);
+            viz_halo(data, choices);
+            viz_bar(data, choices);
+            last_choices = _(choices).clone();
         });
     });
 });

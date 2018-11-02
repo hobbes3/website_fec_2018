@@ -826,6 +826,7 @@ function(
             }
 
             var html = inner_label + "<br/>" +
+                d.data.data[0].party_full_orig + "<br/>" +
                 "Direct donations: " + format_dollar(parseInt(d.data.data[0].total)) + "<br/>" +
                 all_arrow + "Indirect donations: " + format_dollar(total_e) + "<br/>" +
                 sup_arrow + "Indirect donations supporting: " + format_dollar(sup) + " (" + format_pct(sup/total_e) + ")<br/>" +

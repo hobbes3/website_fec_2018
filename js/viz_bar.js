@@ -68,6 +68,7 @@ function(
                         .total("count")
                         .value(),
                     "party": v[0].party,
+                    "party_full_orig": v[0].party_full_orig,
                     "link": v[0].inner_link
                 };
 
@@ -162,6 +163,7 @@ function(
                 total_e = d.total_e;
 
             var html = d.name + "<br/>" +
+                d.party_full_orig + "<br/>" +
                 "⇒ Direct donations: " + format_dollar(d.total) + "<br/>" +
                 "Indirect donations: " + format_dollar(d.total_e) + "<br/>" +
                 "Indirect donations supporting: " + format_dollar(sup) + " (" + format_pct(sup/total_e) + ")<br/>" +
