@@ -55,7 +55,7 @@ function(
             .map(function(v, k) {
                 var o = {
                     "name": k + " - " + v[0].office + " - " + v[0].state,
-                    "total": parseFloat(v[0].total),
+                    "total": v[0].total,
                     "total_e": _(v).total("count"),
                     "total_e_supporting": _(v)
                         .chain()

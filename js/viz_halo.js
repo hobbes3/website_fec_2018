@@ -57,17 +57,6 @@ function(
                 }
             })
             .map(function(o) {
-                var num = parseFloat(o.count);
-
-                if(isNaN(num)) {
-                    throw new SplunkVisualizationBase.VisualizationError(
-                        "All values of the field count must be numeric. Encountered the value: " + o.count
-                    );
-                }
-                else {
-                    o.count = num;
-                }
-
                 o.inner = o.inner + " - " + o.office + " - " + o.state;
 
                 return o;
