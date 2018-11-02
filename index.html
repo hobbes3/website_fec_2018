@@ -83,7 +83,7 @@
           <div class="col-lg-8 mx-auto">
             <h2 class="mb-4">The Data</h2>
             <p class="text-black-50">Modifying the filters below affect both charts.</p>
-            <label for="select_state">
+            <label for="select_office">
                 Select an office:
             </label>
             <select class="form-control" id="select_office">
@@ -95,7 +95,7 @@
             <select class="form-control" id="select_state">
                 <option value="ALL">All states</option>
             </select>
-            <label for="select_state">
+            <label for="select_party">
                 Select a party:
             </label>
             <select class="form-control" id="select_party">
@@ -121,12 +121,14 @@
             <div class="col-lg-8 mx-auto">
                 <h2 class="mb-4">Indirect Donations: (Super) PAC Contributions (<span id="total_e"></span> total)</h2>
                 <p class="text-black-50">Shows up to the top 30 committees and 10 candidates. "H" = House and "S" = Senate.</p>
-                <label for="select_state">
+                <div id="filter_toward">
+                <label for="select_toward">
                     Select toward:
                 </label>
                 <select class="form-control" id="select_toward">
                     <option value="ALL">Both</option>
                 </select>
+                </div>
             </div>
         </div>
       </div>

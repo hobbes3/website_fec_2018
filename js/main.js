@@ -53,6 +53,8 @@ function(
             return o;
         });
 
+        var total_e, total;
+
         function update_totals(choices) {
             var filtered_data = _(data)
                 .filter(o => (choices.office == "ALL" || choices.office == o.office) &&
@@ -60,8 +62,8 @@ function(
                     (choices.party == "ALL" || choices.party == o.party)
                 );
 
-            var total = _(filtered_data).total("total");
-            var total_e = _(filtered_data).total("count");
+            total = _(filtered_data).total("total");
+            total_e = _(filtered_data).total("count");
 
             $("#total").text(format_dollar(total));
             $("#total_e").text(format_dollar(total_e));
@@ -120,8 +122,10 @@ function(
                 .reverse()
                 .value();
 
+            $("#select_toward").find('option[value!=ALL]').remove();
+
             $(toward_data).each((i, o) => {
-                $("#select_toward").find('option[value!=ALL]').remove().append('<option value="' + o.ribbon + '">' +
+                $("#select_toward").append('<option value="' + o.ribbon + '">' +
                     o.ribbon.capitalize() +
                     ' - Indirect Donation: ' + format_dollar_select(o.total_e/1E6) + 'M (' + format_pct(o.total_e/total_e) + ')' +
                     '</option>'

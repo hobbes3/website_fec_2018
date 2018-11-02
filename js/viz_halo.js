@@ -134,6 +134,8 @@ function(
         var total = _(rows).total("count");
 
         if(rows.length == 0) {
+            $("#filter_toward").hide();
+
             d3.select("#viz_halo")
                 .attr("height", 200)
                 .append("text")
@@ -145,6 +147,8 @@ function(
             return;
         }
         else if(total < 1000) {
+            $("#filter_toward").hide();
+
             d3.select("#viz_halo")
                 .attr("height", 200)
                 .append("text")
@@ -155,6 +159,8 @@ function(
                     .text("Too little money with the above filters. Total of $" + total + ".");
             return;
         }
+
+        $("#filter_toward").show();
 
         function get_top(d, key, n) {
             return _(d).chain()
