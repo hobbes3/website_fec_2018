@@ -21,11 +21,11 @@ function(
 
     var choices = {
         "office": "ALL",
-        "state":  "ALL",
-        "party":  "ALL"
+        "state": "ALL",
+        "party": "ALL",
+        "sort": "alpha",
+        "sort_by": "asc"
     };
-
-    var last_choices = _(choices).clone();
 
     _.mixin({
         "total": function(data, key) {
@@ -90,16 +90,26 @@ function(
 
                     return o;
                 })
-                .sortBy(select + "_full")
                 .value();
+
+            if(choices.sort == "alpha") {
+                select_data = _(select_data).sortBy(select + "_full");
+            }
+            else {
+                select_data = _(select_data).sortBy(choices.sort);
+            }
+
+            if(choices.sort_by == "desc") {
+                select_data = _(select_data).reverse();
+            }
 
             $("#select_" + select).find('option[value!=ALL]').remove();
 
             $(select_data).each((i, o) => {
                 $("#select_" + select).append('<option value="' + o[select] + '">' +
                     o[select + "_full"] +
-                    ' - Direct Donation: ' + format_dollar_select(o.total/1E6) + 'M' +
-                    ' - Indirect Donation: ' + format_dollar_select(o.total_e/1E6) + 'M' +
+                    ' - D: ' + format_dollar_select(o.total/1E6) + 'M' +
+                    ' - I: ' + format_dollar_select(o.total_e/1E6) + 'M' +
                     '</option>'
                 )
             });
@@ -127,7 +137,7 @@ function(
             $(toward_data).each((i, o) => {
                 $("#select_toward").append('<option value="' + o.ribbon + '">' +
                     o.ribbon.capitalize() +
-                    ' - Indirect Donation: ' + format_dollar_select(o.total_e/1E6) + 'M (' + format_pct(o.total_e/total_e) + ')' +
+                    ' - I: ' + format_dollar_select(o.total_e/1E6) + 'M (' + format_pct(o.total_e/total_e) + ')' +
                     '</option>'
                 )
             });
@@ -142,10 +152,12 @@ function(
         viz_bar(data, choices);
         last_choices = _(choices).clone();
 
-        $("#select_office, #select_state, #select_party").change(function() {
+        $("#select_office, #select_state, #select_party, input[name=sort], input[name=sort_by]").on("change", function() {
             choices.office = $("#select_office").val();
             choices.state  = $("#select_state").val();
             choices.party  = $("#select_party").val();
+            choices.sort  = $("input[name=sort]:checked").val();
+            choices.sort_by  = $("input[name=sort_by]:checked").val();
 
             update_totals(choices);
 
@@ -153,7 +165,7 @@ function(
                 if(last_choices[k] == v) {
                     create_select(choices, k);
                 }
-            })
+            });
 
             create_toward_select(choices);
             viz_halo(data, choices);
@@ -164,8 +176,10 @@ function(
         $("#reset").on("click", e => {
             choices = {
                 "office": "ALL",
-                "state":  "ALL",
-                "party":  "ALL"
+                "state": "ALL",
+                "party": "ALL",
+                "sort": "alpha",
+                "sort_by": "asc"
             };
 
             update_totals(choices);

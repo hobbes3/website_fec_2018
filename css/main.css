@@ -21,6 +21,12 @@ svg text {
     font: 11px sans-serif;
 }
 
+.btn-filter {
+    padding: 0.5rem 0.5rem;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
 #viz_halo .label-text {
     alignment-baseline: middle;
     text-transform: uppercase;

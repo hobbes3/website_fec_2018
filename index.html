@@ -82,26 +82,50 @@
         <div class="row">
           <div class="col-lg-8 mx-auto">
             <h2 class="mb-4">The Data</h2>
-            <p class="text-black-50">Modifying the filters below affect both charts.</p>
-            <label for="select_office">
-                Select an office:
-            </label>
-            <select class="form-control" id="select_office">
-                <option value="ALL">Both offices</option>
-            </select>
-            <label for="select_state">
-                Select a state:
-            </label>
-            <select class="form-control" id="select_state">
-                <option value="ALL">All states</option>
-            </select>
-            <label for="select_party">
-                Select a party:
-            </label>
-            <select class="form-control" id="select_party">
-                <option value="ALL">All parties</option>
-            </select>
-            <button id="reset" type="button" class="btn btn-outline-secondary btn-sm" style="padding: 0.5rem 0.5rem; margin-top: 20px; ">Reset</button>
+            <p class="text-black-50">Modifying the filters below affect both charts. "D" = direct donations and "I" = indirect donations.</p>
+            <label for="sort_by">Sort filters by:</label><br/>
+                <div id="sort_by" class="btn-group btn-group-toggle" data-toggle="buttons">
+                    <label class="btn-filter btn btn-secondary active">
+                        <input type="radio" name="sort" autocomplete="off" value="alpha" checked>Alphabetical
+                    </label>
+                    <label class="btn-filter btn btn-secondary">
+                        <input type="radio" name="sort" autocomplete="off" value="total" >Direct amount
+                    </label>
+                    <label class="btn-filter btn btn-secondary">
+                        <input type="radio" name="sort" autocomplete="off" value="total_e">Indirect amount
+                    </label>
+                </div>
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    <label class="btn-filter btn btn-secondary active">
+                        <input type="radio" name="sort_by" autocomplete="off" value="asc" checked>Ascending
+                    </label>
+                    <label class="btn-filter btn btn-secondary">
+                        <input type="radio" name="sort_by" autocomplete="off" value="desc">Descending
+                    </label>
+                </div><br/>
+                <br/>
+
+            <div>
+                <label for="select_office">
+                    Select an office:
+                </label>
+                <select class="form-control" id="select_office">
+                    <option value="ALL">Both offices</option>
+                </select>
+                <label for="select_state">
+                    Select a state:
+                </label>
+                <select class="form-control" id="select_state">
+                    <option value="ALL">All states</option>
+                </select>
+                <label for="select_party">
+                    Select a party:
+                </label>
+                <select class="form-control" id="select_party">
+                    <option value="ALL">All parties</option>
+                </select>
+                <button id="reset" type="button" class="btn-filter btn btn-outline-secondary">Reset</button>
+            </div>
           </div>
         </div>
       </div>
