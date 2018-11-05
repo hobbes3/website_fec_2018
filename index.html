@@ -37,13 +37,16 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#about">About</a>
+              <a class="nav-link js-scroll-trigger" href="#about">The Story</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#projects">Projects</a>
+              <a class="nav-link js-scroll-trigger" href="#data">The Data</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#signup">Contact</a>
+              <a class="nav-link js-scroll-trigger" href="#flow">The Flow</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#contacts">The Contacts</a>
             </li>
           </ul>
         </div>
@@ -66,17 +69,17 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-8 mx-auto">
-            <h2 class="text-white mb-4">Built with Bootstrap 4</h2>
+            <h2 class="text-white mb-4">The Story</h2>
             <p class="text-white-50">Grayscale is a free Bootstrap theme created by Start Bootstrap. It can be yours right now, simply download the template on
               <a href="http://startbootstrap.com/template-overviews/grayscale/">the preview page</a>. The theme is open source, and you can use it for any purpose, personal or commercial.</p>
           </div>
         </div>
-        <img src="img/ipad.png" class="img-fluid" alt="">
+        <!--<img src="img/ipad.png" class="img-fluid" alt="">-->
       </div>
     </section>
 
     <!-- Projects Section -->
-    <section id="projects" class="projects-section bg-light">
+    <section id="data" class="projects-section bg-light">
       <div class="container">
 
         <div class="row">
@@ -157,17 +160,24 @@
         </div>
       </div>
       <svg id="viz_halo"></svg>
+    </section>
 
+    <section id="flow" class="projects-section text-center">
       <div class="container">
         <!-- Featured Project Row -->
         <div class="row align-items-center no-gutters mb-4 mb-lg-5">
-          <div class="col-xl-8 col-lg-7">
-            <img class="img-fluid mb-3 mb-lg-0" src="img/bg-masthead.jpg" alt="">
+          <div class="col-xl-4 col-lg-7">
+            <img class="img-fluid mb-3 mb-lg-0" src="img/fec_logo.png" alt="">
           </div>
-          <div class="col-xl-4 col-lg-5">
+          <div class="col-xl-6 col-lg-5">
             <div class="featured-text text-center text-lg-left">
-              <h4>Shoreline</h4>
-              <p class="text-black-50 mb-0">Grayscale is open source and MIT licensed. This means you can use it for any project - even commercial projects! Download it, customize it, and publish your website!</p>
+              <h4>The Flow</h4>
+              <p class="text-black-50 mb-0">
+              The Federal Elections Commission has for many years made data available on the funding of presidential elections in the United States. Data is readily available on the FEC website on who, what, and from where direct contributions are coming into candidates. You can ask questions, search names, and even look at this all on pretty maps. What is harder to find, however, is accessible information on Super-PACs. And that’s where Splunk comes in.
+              </p>
+              <p class="text-black-50 mb-0">
+              We have linked up to the latest FEC reports directly via the OpenFEC API, where we get access to the latest contributions and spending data as soon as the data is updated. Ingesting into Splunk is easy and anyone can visualize the data themselves. Splunk has a number of out-of-the-box visualizations available, or you can design your own in d3 or other visualization libraries. The visualization displayed above is called "Halo" and is built using d3.js, and is be available for use in Splunk at <a href="https://splunkbase.splunk.com/app/3514" target="_blank">Splunkbase</a>.
+            </p>
             </div>
           </div>
         </div>
@@ -212,18 +222,15 @@
     </section>
 
     <!-- Signup Section -->
-    <section id="signup" class="signup-section">
+    <section id="contacts" class="signup-section">
       <div class="container">
         <div class="row">
           <div class="col-md-10 col-lg-8 mx-auto text-center">
 
             <i class="far fa-paper-plane fa-2x mb-2 text-white"></i>
-            <h2 class="text-white mb-5">Subscribe to receive updates!</h2>
+            <h2 class="text-white mb-5">The Contacts</h2>
 
-            <form class="form-inline d-flex">
-              <input type="email" class="form-control flex-fill mr-0 mr-sm-2 mb-3 mb-sm-0" id="inputEmail" placeholder="Enter email address...">
-              <button type="submit" class="btn btn-primary mx-auto">Subscribe</button>
-            </form>
+            <p class="mb-0 text-white-50">Interested in learning more about Splunk and Splunk4Good? Visit us <a href="https://www.splunk.com/" target="_blank">online</a> or <a href="https://www.splunk.com/en_us/about-us/contact.html" target="_blank">contact Splunk</a> to learn more or to inquire about our products and solutions.</p>
 
           </div>
         </div>
@@ -242,7 +249,7 @@
                 <i class="fas fa-map-marked-alt text-primary mb-2"></i>
                 <h4 class="text-uppercase m-0">Address</h4>
                 <hr class="my-4">
-                <div class="small text-black-50">4923 Market Street, Orlando FL</div>
+                <div class="small text-black-50">270 Brannan St, San Francisco, CA 94107</div>
               </div>
             </div>
           </div>
@@ -251,10 +258,10 @@
             <div class="card py-4 h-100">
               <div class="card-body text-center">
                 <i class="fas fa-envelope text-primary mb-2"></i>
-                <h4 class="text-uppercase m-0">Email</h4>
+                <h4 class="text-uppercase m-0">Contact Us</h4>
                 <hr class="my-4">
                 <div class="small text-black-50">
-                  <a href="#">hello@yourdomain.com</a>
+                  <a href="https://www.splunk.com/en_us/about-us/contact.html">https://www.splunk.com/en_us/about-us/contact.html</a>
                 </div>
               </div>
             </div>
@@ -266,7 +273,7 @@
                 <i class="fas fa-mobile-alt text-primary mb-2"></i>
                 <h4 class="text-uppercase m-0">Phone</h4>
                 <hr class="my-4">
-                <div class="small text-black-50">+1 (555) 902-8832</div>
+                <div class="small text-black-50">+1 866.GET.SPLUNK (1 866.438.7758)</div>
               </div>
             </div>
           </div>
