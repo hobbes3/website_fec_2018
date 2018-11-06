@@ -166,8 +166,8 @@ function(
                 d.party_full_orig + "<br/>" +
                 "⇒ Direct donations: " + format_dollar(d.total) + "<br/>" +
                 "Indirect donations: " + format_dollar(d.total_e) + "<br/>" +
-                "Indirect donations supporting: " + format_dollar(sup) + " (" + format_pct(sup/total_e) + ")<br/>" +
-                "Indirect donations opposing: " + format_dollar(opp) + " (" + format_pct(opp/total_e) + ")<br/>" +
+                "Indirect donations supporting: " + format_dollar(sup) + " (" + format_pct((sup/total_e) || 0)  + ")<br/>" +
+                "Indirect donations opposing: " + format_dollar(opp) + " (" + format_pct((opp/total_e) || 0) + ")<br/>" +
                 "<i>Click for more details</i>";
 
             bar
